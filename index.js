@@ -131,7 +131,7 @@ function runFaceInspection(req, res, data) {
             createHtmlResultPage(req, res, data);
         } else {
             console.log('No faces detected\n');
-            data.messageHeader = 'Info';
+            data.messageHeader = 'API response';
             data.messageText = 'No faces detected in this image';
             createHtmlMessagePage(req, res, data);
         }
@@ -156,7 +156,7 @@ function createHtmlStartPage(req, res, data) {
     res.write('<h4 style="text-shadow:1px 1px 0 #444">Select an image</h4>');
 
     res.write('<form action="results" method="post" enctype="multipart/form-data">');
-    res.write('<input class="w3-input w3-padding-16" style="color: black;" type="file" name="filetoupload">');
+    res.write('<input class="w3-input w3-padding-8" style="color: black; padding-left:0px; padding-bottom:30px;" type="file" name="filetoupload">');
     res.write('<input class="w3-input w3-padding-16" style="color: white; background-color:#006699;" type="submit">');
     res.write('</form>');
 
