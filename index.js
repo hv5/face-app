@@ -1,7 +1,11 @@
+"use strict";
+
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const request = require('request');
+const util = require('util');
 const path = require('path');
+const fs = require('fs');
 const app = express();
  
 
@@ -10,18 +14,30 @@ app.use('/images', express.static(__dirname + '/images'));
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {
-    createHtmlStartPage(req, res);
+    startPage(req, res);
 });
 
 app.post('/results', function(req, res) {
     uploadFile(req, res);
 });
 
-port = process.env.PORT || 3000;
+var port = process.env.PORT || 3000;
 app.listen(port, function() {
     console.log("Server running at http://localhost:%d", port);
 });
 
+
+function startPage(req, res) {
+    var data = {};
+
+    // Get timestamp for index.js
+    var ifile = __dirname + '/index.js';
+    if (fs.existsSync(ifile)) {
+        var stats = fs.statSync(ifile);
+        data.appModifiedString = new Date(util.inspect(stats.mtime)).toString();
+    }
+    createHtmlStartPage(req, res, data);
+}
 
 function uploadFile(req, res) {
     if (!req.files || !req.files.filetoupload)
@@ -92,9 +108,9 @@ function runFaceInspection(req, res, data) {
         }
 
         var jsonRes = JSON.parse(body);
-        var jsonResString = JSON.stringify(jsonRes);
+        var jsonResStr = JSON.stringify(jsonRes);
         console.log('JSON response:');
-        console.log(jsonResString);
+        console.log(jsonResStr);
 
         data.messageHeader = null;
         data.messageText = null;
@@ -122,7 +138,7 @@ function runFaceInspection(req, res, data) {
     });
 }
 
-function createHtmlStartPage(req, res) {
+function createHtmlStartPage(req, res, data) {
     res.setHeader('Content-Type', 'text/html');
 
     res.write('<html>');
@@ -145,6 +161,13 @@ function createHtmlStartPage(req, res) {
     res.write('</form>');
 
     res.write('</div>');
+
+    // Last modified info
+    if (data.appModifiedString) {
+        res.write('<div class="w3-container">');
+        res.write('<p style="font-size:10px; text-align:left">' + data.appModifiedString + '</p>');
+        res.write('</div>');
+    }
 
     res.write("</body>");
     res.write("</html>");
@@ -194,7 +217,7 @@ function createHtmlResultPage(req, res, data) {
     res.write('<div class="w3-container w3-light-grey">');
 
     res.write('<p>');
-    res.write('<img src="' + data.imageRelUrl + '" style="width:256px; height:256;"></img>' + '<br>');
+    res.write('<img src="' + data.imageRelUrl + '" style="width:300px;"></img>' + '<br>');
     res.write('<a href="' + data.imageUrl + '">View full image</a>' + '<br>');
     res.write('</p>');
     
@@ -203,7 +226,6 @@ function createHtmlResultPage(req, res, data) {
     res.write('<p>');
     res.write('Gender: ' + data.faceAttributes.gender + '<br>');
     res.write('Age: ' + data.faceAttributes.age + '<br>');
-    res.write('Glasses: ' + data.faceAttributes.glasses + '<br>');
     res.write('Anger (0-1): ' + data.faceAttributes.emotion.anger + '<br>');
     res.write('Happiness (0-1): ' + data.faceAttributes.emotion.happiness + '<br>');
     res.write('Sadness (0-1): ' + data.faceAttributes.emotion.sadness + '<br>');
