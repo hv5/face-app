@@ -221,7 +221,7 @@ function createHtmlResultPage(req, res, data) {
     res.write('<a href="' + data.imageUrl + '">View full image</a>' + '<br>');
     res.write('</p>');
     
-    res.write('<h4 style="text-shadow:1px 1px 0 #444">Face Attributes</h4>');
+    res.write('<h4 style="text-shadow:1px 1px 0 #444">Face attributes</h4>');
 
     res.write('<table class="w3-table-all" style="width:300px">');
     res.write('<tr><td>' + 'Gender'          + '</td><td>' + data.faceAttributes.gender + '</td></tr>');
@@ -230,6 +230,8 @@ function createHtmlResultPage(req, res, data) {
     res.write('<tr><td>' + 'Happiness (0-1)' + '</td><td>' + data.faceAttributes.emotion.happiness  + '</td></tr>');
     res.write('<tr><td>' + 'Sadness (0-1)'   + '</td><td>' + data.faceAttributes.emotion.sadness  + '</td></tr>');
     res.write('<tr><td>' + 'Neutral (0-1)'   + '</td><td>' + data.faceAttributes.emotion.neutral  + '</td></tr>');
+    res.write('<tr><td>' + 'Eye makeup'      + '</td><td>' + data.faceAttributes.makeup.eyeMakeup  + '</td></tr>');
+    res.write('<tr><td>' + 'Lip makeup'      + '</td><td>' + data.faceAttributes.makeup.lipMakeup  + '</td></tr>');
     res.write('</table>');
 
     res.write('<br>'); 
