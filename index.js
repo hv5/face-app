@@ -223,15 +223,15 @@ function createHtmlResultPage(req, res, data) {
     
     res.write('<h4 style="text-shadow:1px 1px 0 #444">Face Attributes</h4>');
 
-    res.write('<p>');
-    res.write('Gender: ' + data.faceAttributes.gender + '<br>');
-    res.write('Age: ' + data.faceAttributes.age + '<br>');
-    res.write('Anger (0-1): ' + data.faceAttributes.emotion.anger + '<br>');
-    res.write('Happiness (0-1): ' + data.faceAttributes.emotion.happiness + '<br>');
-    res.write('Sadness (0-1): ' + data.faceAttributes.emotion.sadness + '<br>');
-    res.write('Neutral (0-1): ' + data.faceAttributes.emotion.neutral + '<br>');
-    res.write('</p>');
-    
+    res.write('<table class="w3-table-all" style="width:300px">');
+    res.write('<tr><td>' + 'Gender'          + '</td><td>' + data.faceAttributes.gender + '</td></tr>');
+    res.write('<tr><td>' + 'Age'             + '</td><td>' + data.faceAttributes.age    + '</td></tr>');
+    res.write('<tr><td>' + 'Anger (0-1)'     + '</td><td>' + data.faceAttributes.emotion.anger  + '</td></tr>');
+    res.write('<tr><td>' + 'Happiness (0-1)' + '</td><td>' + data.faceAttributes.emotion.happiness  + '</td></tr>');
+    res.write('<tr><td>' + 'Sadness (0-1)'   + '</td><td>' + data.faceAttributes.emotion.sadness  + '</td></tr>');
+    res.write('<tr><td>' + 'Neutral (0-1)'   + '</td><td>' + data.faceAttributes.emotion.neutral  + '</td></tr>');
+    res.write('</table>');
+
     res.write('<br>'); 
     res.write('<h4 style="text-shadow:1px 1px 0 #444">Face API response</h4>');
 
