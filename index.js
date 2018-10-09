@@ -1,5 +1,3 @@
-"use strict";
-
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const request = require('request');
@@ -7,6 +5,9 @@ const util = require('util');
 const path = require('path');
 const fs = require('fs');
 const app = express();
+
+const apiKey = '24bd7871649943e3b38c25dc478990a3';
+const apiUri = 'https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect';
  
 
 app.use(fileUpload());
@@ -14,11 +15,11 @@ app.use('/images', express.static(__dirname + '/images'));
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {
-    startPage(req, res);
+    selectImage(req, res);
 });
 
 app.post('/results', function(req, res) {
-    uploadFile(req, res);
+    uploadImage(req, res);
 });
 
 var port = process.env.PORT || 3000;
@@ -27,7 +28,7 @@ app.listen(port, function() {
 });
 
 
-function startPage(req, res) {
+function selectImage(req, res) {
     var data = {};
 
     // Get timestamp for index.js
@@ -39,7 +40,7 @@ function startPage(req, res) {
     createHtmlStartPage(req, res, data);
 }
 
-function uploadFile(req, res) {
+function uploadImage(req, res) {
     if (!req.files || !req.files.filetoupload)
         return res.status(400).send('No files were uploaded.');
 
@@ -48,7 +49,6 @@ function uploadFile(req, res) {
 
     var ext = path.extname(uploadFile.name);
 
-    //var newFileName = new Date().getTime() + ext;
     var newFileName = 'img-' + Math.random().toString(36).substr(2,16) + ext;
     var newFilePath = __dirname + '/images/' + newFileName;
     
@@ -56,16 +56,12 @@ function uploadFile(req, res) {
 
     var data = {};
     data.imageRelUrl = 'images/' + newFileName;
-    //data.imageUrl = req.protocol + '://' + req.get('host') + '/images/' + newFileName;
 
     var hostName = req.get('host');
     if (hostName.startsWith('localhost'))
         data.imageUrl = 'http://' + hostName + '/images/' + newFileName;
     else    
         data.imageUrl = 'https://' + hostName + '/images/' + newFileName;
-
-    // For local testing
-    //data.imageUrl = 'https://evje-face-app.azurewebsites.net/images/image.jpg';
 
     console.log('imageRelUrl: ' + data.imageRelUrl);
     console.log('imageUrl: ' + data.imageUrl);
@@ -80,9 +76,6 @@ function uploadFile(req, res) {
 
 function runFaceInspection(req, res, data) {
     
-    const apiKey = '24bd7871649943e3b38c25dc478990a3';
-    const apiUri = 'https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect';
-
     const apiParams = {
         'returnFaceId': 'true',
         'returnFaceLandmarks': 'false',
@@ -100,7 +93,6 @@ function runFaceInspection(req, res, data) {
         }
     };
 
-    //request.post(options, (error, response, body) => {
     request.post(options, function(error, response, body) {
         if (error) {
           console.log('Error: ', error);
@@ -157,9 +149,9 @@ function createHtmlStartPage(req, res, data) {
 
     res.write('<form action="results" method="post" enctype="multipart/form-data">');
     res.write('<input class="w3-input w3-padding-8" style="color: black; padding-left:0px; padding-bottom:30px;" type="file" name="filetoupload">');
-    res.write('<input class="w3-input w3-padding-16" style="color: white; background-color:#006699;" type="submit">');
+    res.write('<input class="w3-input w3-padding-16" style="color: white; background-color:#24478f;" type="submit">');
     res.write('</form>');
-
+    
     res.write('</div>');
 
     // Last modified info
@@ -223,15 +215,17 @@ function createHtmlResultPage(req, res, data) {
     
     res.write('<h4 style="text-shadow:1px 1px 0 #444">Face attributes</h4>');
 
-    res.write('<table class="w3-table-all" style="width:300px">');
-    res.write('<tr><td>' + 'Gender'          + '</td><td>' + data.faceAttributes.gender + '</td></tr>');
-    res.write('<tr><td>' + 'Age'             + '</td><td>' + data.faceAttributes.age    + '</td></tr>');
-    res.write('<tr><td>' + 'Anger (0-1)'     + '</td><td>' + data.faceAttributes.emotion.anger  + '</td></tr>');
-    res.write('<tr><td>' + 'Happiness (0-1)' + '</td><td>' + data.faceAttributes.emotion.happiness  + '</td></tr>');
-    res.write('<tr><td>' + 'Sadness (0-1)'   + '</td><td>' + data.faceAttributes.emotion.sadness  + '</td></tr>');
-    res.write('<tr><td>' + 'Neutral (0-1)'   + '</td><td>' + data.faceAttributes.emotion.neutral  + '</td></tr>');
-    res.write('<tr><td>' + 'Eye makeup'      + '</td><td>' + data.faceAttributes.makeup.eyeMakeup  + '</td></tr>');
-    res.write('<tr><td>' + 'Lip makeup'      + '</td><td>' + data.faceAttributes.makeup.lipMakeup  + '</td></tr>');
+    res.write('<table class="w3-table-all w3-text-indigo" style="width:300px">');
+    res.write('<tr><td>' + '<b>Gender</b>'          + '</td><td>' + data.faceAttributes.gender + '</td></tr>');
+    res.write('<tr><td>' + '<b>Age</b>'             + '</td><td>' + data.faceAttributes.age    + '</td></tr>');
+    res.write('<tr><td>' + '<b>Anger (0-1)</b>'     + '</td><td>' + data.faceAttributes.emotion.anger  + '</td></tr>');
+    res.write('<tr><td>' + '<b>Fear (0-1)</b>'      + '</td><td>' + data.faceAttributes.emotion.fear  + '</td></tr>');
+    res.write('<tr><td>' + '<b>Happiness (0-1)</b>' + '</td><td>' + data.faceAttributes.emotion.happiness  + '</td></tr>');
+    res.write('<tr><td>' + '<b>Sadness (0-1)</b>'   + '</td><td>' + data.faceAttributes.emotion.sadness  + '</td></tr>');
+    res.write('<tr><td>' + '<b>Surprise (0-1)</b>'  + '</td><td>' + data.faceAttributes.emotion.surprise  + '</td></tr>');
+    res.write('<tr><td>' + '<b>Neutral (0-1)</b>'   + '</td><td>' + data.faceAttributes.emotion.neutral  + '</td></tr>');
+    res.write('<tr><td>' + '<b>Eye makeup</b>'      + '</td><td>' + data.faceAttributes.makeup.eyeMakeup  + '</td></tr>');
+    res.write('<tr><td>' + '<b>Lip makeup</b>'      + '</td><td>' + data.faceAttributes.makeup.lipMakeup  + '</td></tr>');
     res.write('</table>');
 
     res.write('<br>'); 
