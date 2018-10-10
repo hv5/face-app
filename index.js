@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
-const apiKey = '24bd7871649943e3b38c25dc478990a3';
+const apiKey = 'TODO';
 const apiUri = 'https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect';
  
 
@@ -45,12 +45,15 @@ function uploadImage(req, res) {
         return res.status(400).send('No files were uploaded.');
 
     var uploadFile = req.files.filetoupload;
-    //console.log(uploadFile);
+
+    // Make sure image folder exist
+    var imgFolder = __dirname + '/images/';
+    if (!fs.existsSync(imgFolder))
+        fs.mkdirSync(imgFolder);
 
     var ext = path.extname(uploadFile.name);
-
     var newFileName = 'img-' + Math.random().toString(36).substr(2,16) + ext;
-    var newFilePath = __dirname + '/images/' + newFileName;
+    var newFilePath = imgFolder + newFileName;
     
     console.log('newFilePath = ' + newFilePath);
 
@@ -59,9 +62,9 @@ function uploadImage(req, res) {
 
     var hostName = req.get('host');
     if (hostName.startsWith('localhost'))
-        data.imageUrl = 'http://' + hostName + '/images/' + newFileName;
+        data.imageUrl = 'http://' + hostName + '/' + data.imageRelUrl;
     else    
-        data.imageUrl = 'https://' + hostName + '/images/' + newFileName;
+        data.imageUrl = 'https://' + hostName + '/' + data.imageRelUrl;
 
     console.log('imageRelUrl: ' + data.imageRelUrl);
     console.log('imageUrl: ' + data.imageUrl);
@@ -93,6 +96,7 @@ function runFaceInspection(req, res, data) {
         }
     };
 
+    // Make API request
     request.post(options, function(error, response, body) {
         if (error) {
           console.log('Error: ', error);
