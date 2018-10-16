@@ -20,9 +20,10 @@ Create simple web app
 	- *npm install express*
 	- *npm install express-fileupload*
 
-7. TODO: Open File Explorer and navigate to ...
+7. Open File Explorer and navigate to ...
 8. Drag file index.js into Visual Studio Code explorer window
 9. Drag file web.config into Visual Studio Code explorer window
+10. Select index.js and add the correct Face API key
 10. From Terminal window, run *node index.js* to start local web server
 11. Open a web browser and navigate to http://localhost:3000/
 

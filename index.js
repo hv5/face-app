@@ -4,6 +4,7 @@ const request = require('request');
 const util = require('util');
 const path = require('path');
 const fs = require('fs');
+
 const app = express();
 
 const apiKey = 'TODO';
@@ -153,7 +154,7 @@ function createHtmlStartPage(req, res, data) {
 
     res.write('<form action="results" method="post" enctype="multipart/form-data">');
     res.write('<input class="w3-input w3-padding-8" style="color: black; padding-left:0px; padding-bottom:30px;" type="file" name="filetoupload">');
-    res.write('<input class="w3-input w3-padding-16" style="color: white; background-color:#24478f;" type="submit">');
+    res.write('<input class="w3-input w3-padding-16" style="color: white; background-color:#24478f;" type="submit" value="Run face inspection">');
     res.write('</form>');
     
     res.write('</div>');
