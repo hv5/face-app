@@ -200,6 +200,8 @@ function createHtmlMessagePage(req, res, data) {
 
 
 function createHtmlResultPage(req, res, data) {
+    var fa = data.faceAttributes;
+
     res.setHeader('Content-Type', 'text/html');
 
     res.write('<html>');
@@ -221,16 +223,17 @@ function createHtmlResultPage(req, res, data) {
     res.write('<h4 style="text-shadow:1px 1px 0 #444">Face attributes</h4>');
 
     res.write('<table class="w3-table-all w3-text-indigo" style="width:300px">');
-    res.write('<tr><td>' + '<b>Gender</b>'          + '</td><td>' + data.faceAttributes.gender + '</td></tr>');
-    res.write('<tr><td>' + '<b>Age</b>'             + '</td><td>' + data.faceAttributes.age    + '</td></tr>');
-    res.write('<tr><td>' + '<b>Anger (0-1)</b>'     + '</td><td>' + data.faceAttributes.emotion.anger  + '</td></tr>');
-    res.write('<tr><td>' + '<b>Fear (0-1)</b>'      + '</td><td>' + data.faceAttributes.emotion.fear  + '</td></tr>');
-    res.write('<tr><td>' + '<b>Happiness (0-1)</b>' + '</td><td>' + data.faceAttributes.emotion.happiness  + '</td></tr>');
-    res.write('<tr><td>' + '<b>Sadness (0-1)</b>'   + '</td><td>' + data.faceAttributes.emotion.sadness  + '</td></tr>');
-    res.write('<tr><td>' + '<b>Surprise (0-1)</b>'  + '</td><td>' + data.faceAttributes.emotion.surprise  + '</td></tr>');
-    res.write('<tr><td>' + '<b>Neutral (0-1)</b>'   + '</td><td>' + data.faceAttributes.emotion.neutral  + '</td></tr>');
-    res.write('<tr><td>' + '<b>Eye makeup</b>'      + '</td><td>' + data.faceAttributes.makeup.eyeMakeup  + '</td></tr>');
-    res.write('<tr><td>' + '<b>Lip makeup</b>'      + '</td><td>' + data.faceAttributes.makeup.lipMakeup  + '</td></tr>');
+    res.write('<tr><td>' + '<b>Gender</b>'        + '</td><td>' + fa.gender + '</td></tr>');
+    res.write('<tr><td>' + '<b>Age</b>'           + '</td><td>' + fa.age    + '</td></tr>');
+    res.write('<tr><td>' + '<b>Anger (%)</b>'     + '</td><td>' + Math.round(fa.emotion.anger * 100) + '</td></tr>');
+    res.write('<tr><td>' + '<b>Disgust (%)</b>'   + '</td><td>' + Math.round(fa.emotion.disgust * 100) + '</td></tr>');
+    res.write('<tr><td>' + '<b>Fear (%)</b>'      + '</td><td>' + Math.round(fa.emotion.fear * 100) + '</td></tr>');
+    res.write('<tr><td>' + '<b>Happiness (%)</b>' + '</td><td>' + Math.round(fa.emotion.happiness * 100) + '</td></tr>');
+    res.write('<tr><td>' + '<b>Sadness (%)</b>'   + '</td><td>' + Math.round(fa.emotion.sadness * 100) + '</td></tr>');
+    res.write('<tr><td>' + '<b>Surprise (%)</b>'  + '</td><td>' + Math.round(fa.emotion.surprise * 100) + '</td></tr>');
+    res.write('<tr><td>' + '<b>Neutral (%)</b>'   + '</td><td>' + Math.round(fa.emotion.neutral * 100) + '</td></tr>');
+    res.write('<tr><td>' + '<b>Eye makeup</b>'    + '</td><td>' + fa.makeup.eyeMakeup  + '</td></tr>');
+    res.write('<tr><td>' + '<b>Lip makeup</b>'    + '</td><td>' + fa.makeup.lipMakeup  + '</td></tr>');
     res.write('</table>');
 
     res.write('<br>'); 
